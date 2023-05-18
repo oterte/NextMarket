@@ -6,7 +6,7 @@ import { json } from "stream/consumers";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
+  const [products, setProducts] = useState<{ id: string; name: string; createdAt:String }[]>([]);
   useEffect(() => {
     fetch(`/api/get-products`)
       .then((res) => res.json())
@@ -24,7 +24,7 @@ export default function Home() {
       <div>
         <p>Product List</p>
         {products &&
-          products.map((item) => <div key={item.id}>{item.name}</div>)}
+          products.map((item) => <div key={item.id}>{item.name} <span>{item.createdAt}</span></div>)}
       </div>
     </div>
   );

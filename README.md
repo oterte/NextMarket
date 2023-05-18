@@ -5,4 +5,6 @@ NextMarket 기술 선택
 2. planetscale을 통해 서버리스 db를 생성
 
 3. db에 더 간결하게 통신하기 위해 prsima를 이용
-    prisma -> ORM
+    prisma -> Typescript 기반 ORM
+
+4. 메인 디비에 스키마 추가
