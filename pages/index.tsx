@@ -15,7 +15,7 @@ export default function Home() {
     fetch(`/api/get-products`)
       .then((res) => res.json())
       .then((data) => setProducts(data.items));
-  });
+  }, []);
 
   const onHandleClick = () => {
     if (inputRef.current == null || inputRef.current.value === "") {
