@@ -45,3 +45,5 @@ NextMarket 기술 선택
    ```javascript
    const {id, contents} = JSON.parse(req.body);
    ```
+10. ts-node를 활용하여 db에 상품목록을 집어넣어서 상품목록 구현
+   -> ts-node는 cli 상에서 ts 파일을 실행해주는 도구

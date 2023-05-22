@@ -1,30 +1,42 @@
 import { products } from "@prisma/client";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-
+import { Pagination } from "@mantine/core";
 const Take = 9;
 
 function Products() {
-  const [skip, setSkip] = useState(0);
+  // const [skip, setSkip] = useState(0);
+  const [activePage, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [products, setProducts] = useState<products[]>([]);
 
   useEffect(() => {
+    fetch(`/api/get-products-count`)
+      .then((res) => res.json())
+      .then((data) => setTotal(Math.ceil(data.items / Take)));
     fetch(`/api/get-products?skip=0&take=${Take}`)
       .then((res) => res.json())
       .then((data) => setProducts(data.items));
   }, []);
 
-  const onGetProducts = useCallback(() => {
-    const next = skip + Take;
-    fetch(`/api/get-products?skip=${next}&take=${Take}`)
+  useEffect(() => {
+    const skip = Take * (activePage - 1);
+    fetch(`/api/get-products?skip=${skip}&take=${Take}`)
       .then((res) => res.json())
-      .then((data) => {
-        // 배열 불변성 유지 필수
-        const list = products.concat(data.items)
-        setProducts(list)
-      });
-      setSkip(next)
-  }, [skip, products]);
+      .then((data) => setProducts(data.items));
+  }, [activePage]);
+
+  // const onGetProducts = useCallback(() => {
+  //   const next = skip + Take;
+  //   fetch(`/api/get-products?skip=${next}&take=${Take}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // 배열 불변성 유지 필수
+  //       const list = products.concat(data.items)
+  //       setProducts(list)
+  //     });
+  //     setSkip(next)
+  // }, [skip, products]);
   return (
     <div className="px-36 mt-36 mb-36">
       {products && (
@@ -53,12 +65,20 @@ function Products() {
           ))}
         </div>
       )}
-      <button
+      {/* <button
         className="w-full rounded mt-20 bg-zinc-200 p-4"
         onClick={onGetProducts}
       >
         더보기
-      </button>
+      </button> */}
+      <div className="w-full flex mt-5">
+        <Pagination
+          className="m-auto"
+          value={activePage}
+          onChange={setPage}
+          total={total}
+        />
+      </div>
     </div>
   );
 }
