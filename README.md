@@ -40,18 +40,69 @@ NextMarket 기술 선택
      contents: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
    });
    ```
+
    -> 정상적으로 보내지긴 했지만 업데이트는 안됨.
    -> body로 보내고 있는 값을 json형태로 파싱해주지 않아서 생긴 문제, 파싱 후 요청하니 업데이트 성공
+
    ```javascript
-   const {id, contents} = JSON.parse(req.body);
+   const { id, contents } = JSON.parse(req.body);
    ```
+
 10. ts-node를 활용하여 db에 상품목록을 집어넣어서 상품목록 구현
-   -> ts-node는 cli 상에서 ts 파일을 실행해주는 도구
+    -> ts-node는 cli 상에서 ts 파일을 실행해주는 도구
 
 11. mantine UI 사용 -> 손쉽게 페이지네이션 디자인이나 컴포넌트 디자인을 하기 위해
 
-
-12~13 -> input 이벤트 최적화, 조회에 캐시 활용
-12. 검색 기능에 debounce 추가 -> 사용자가 input에 입력할 때마다 검색 목록을 조회해 온다 -> 서버에 부담이 커질거라고 예상됨 -> debounce를 걸어서 사용자가 원하는 목록만 조회할 수 있게 조절
+12~13 -> input 이벤트 최적화, 조회에 캐시 활용 12. 검색 기능에 debounce 추가 -> 사용자가 input에 입력할 때마다 검색 목록을 조회해 온다 -> 서버에 부담이 커질거라고 예상됨 -> debounce를 통해 검색 조회에 delay를 설정해서 서버 부담을 줄임
 
 13. 캐싱을 위해 react-query 사용 -> 기존에는 똑같은 요청에 대해서 계속 db조회를 해왔음. 이걸 방지하기 위해 사용 -> 검색한 결과물들을 캐싱하여 나중에 다시 조회한다 하더라도 api 요청을 다시 보내지 않는다
+
+14. 리액트 쿼리를 이용하여 두번 요청이 되던걸 한번으로 줄임
+    -> 기존에는 useEffect를 활용하여 페이지 mount 시에 요청하는걸로 했지만 이런 경우 두번 요청이 되어짐
+    -> 불필요한 요청을 없애기 위해 react-query를 이용하여 한번만 요청하는걸로 변경
+
+```typescript
+// 기존에 사용하던 방법
+const [categories, setCategories] = useState<categories[]>([]);
+const [selectedCategory, setSelectedCategory] = useState<string>("-1");
+
+useEffect(() => {
+  fetch(`/api/get-categories`)
+    .then((res) => res.json())
+    .then((data) => setCategories(data.items));
+}, []);
+useEffect(() => {
+    fetch(
+      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`
+    )
+      .then((res) => res.json())
+      .then((data) => setTotal(Math.ceil(data.items / Take)));
+  }, [selectedCategory, debouncedSearch]);
+
+
+
+  ======================================================
+  // react-query를 이용해 변경한 방법
+  const { data: categories } = useQuery<
+    { items: categories[] },
+    unknown,
+    categories[]
+  >(
+    ["/api/get-categories"],
+    () => fetch(`/api/get-categories`).then((res) => res.json()),
+    { select: (data) => data.items }
+  );
+
+  const { data: total } = useQuery(
+    [
+      "/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}",
+    ],
+    () =>
+      fetch(
+        `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`
+      ).then((res) => res.json()),
+    { select: (data) => data.items }
+  );
+```
+
+15. 회원가입 및 로그인

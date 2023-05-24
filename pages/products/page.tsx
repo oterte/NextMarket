@@ -8,39 +8,36 @@ import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 
 function Products() {
-  // const [skip, setSkip] = useState(0);
   const [activePage, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [categories, setCategories] = useState<categories[]>([]);
+  // const [total, setTotal] = useState(0);
+
   const [selectedCategory, setSelectedCategory] = useState<string>("-1");
-  // const [products, setProducts] = useState<products[]>([]);
   const [filter, setFilter] = useState<string | null>(FILTERS[0].value);
   const [keyword, setKeyword] = useState("");
 
   const debouncedSearch = useDebounce<string>(keyword);
 
-  useEffect(() => {
-    fetch(`/api/get-categories`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data.items));
-  }, []);
-  useEffect(() => {
-    fetch(
-      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`
-    )
-      .then((res) => res.json())
-      .then((data) => setTotal(Math.ceil(data.items / Take)));
-  }, [selectedCategory, debouncedSearch]);
+  const { data: categories } = useQuery<
+    { items: categories[] },
+    unknown,
+    categories[]
+  >(
+    ["/api/get-categories"],
+    () => fetch(`/api/get-categories`).then((res) => res.json()),
+    { select: (data) => data.items }
+  );
 
-  // useEffect(() => {
-  //   const skip = Take * (activePage - 1);
-  //   fetch(
-  //     `/api/get-products?skip=${skip}&take=${Take}&category=${selectedCategory}&orderBy=${filter}&contains=${debouncedSearch}`
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => setProducts(data.items));
-  // }, [activePage, selectedCategory, filter, debouncedSearch]);
-
+  const { data: total } = useQuery(
+    [
+      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`,
+    ],
+    () =>
+      fetch(
+        `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`
+      )
+        .then((res) => res.json())
+        .then((data) => Math.ceil(data.items / Take))
+  );
   const { data: products } = useQuery<
     { items: products[] },
     unknown,
@@ -128,12 +125,14 @@ function Products() {
         더보기
       </button> */}
       <div className="w-full flex mt-5">
-        <Pagination
-          className="m-auto"
-          value={activePage}
-          onChange={setPage}
-          total={total}
-        />
+        {total && (
+          <Pagination
+            className="m-auto"
+            value={activePage}
+            onChange={setPage}
+            total={total}
+          />
+        )}
       </div>
     </div>
   );
