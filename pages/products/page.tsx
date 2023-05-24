@@ -118,12 +118,6 @@ function Products() {
           ))}
         </div>
       )}
-      {/* <button
-        className="w-full rounded mt-20 bg-zinc-200 p-4"
-        onClick={onGetProducts}
-      >
-        더보기
-      </button> */}
       <div className="w-full flex mt-5">
         {total && (
           <Pagination
