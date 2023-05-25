@@ -114,3 +114,4 @@ useEffect(() => {
 
 16. Google OAuth를 통해 회원가입 구현
    -> 이를 위해 react-oauth 라이브러리 사용
+17. NextAuth.js를 이용해 인증 구현
