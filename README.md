@@ -114,6 +114,7 @@ useEffect(() => {
 
 16. Google OAuth를 통해 회원가입 구현
    -> 이를 위해 react-oauth 라이브러리 사용
+
 17. NextAuth.js를 이용해 인증 구현
 
 
@@ -123,3 +124,5 @@ useEffect(() => {
     - ssr을 통해 상세페이지 구현 -> 기존에는 useEffect를 통해 접근할 때마다 api 요청을 통해 이미지들을 불러왔었음.
     - 찜하기 기능 구현 이전에 상세 페이지 디자인 다듬기
     - 찜하기 -> Session으로 사용자의 wishlist 목록 조회 -> 모든 테이블을 조회하는게 아닌, where로 userId를 조회하자
+
+
