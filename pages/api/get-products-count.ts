@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+// console.log(prisma)
 
 async function getProductsCount(category: number, contains: string) {
   // containsCondition이 있다면 그 값 추가

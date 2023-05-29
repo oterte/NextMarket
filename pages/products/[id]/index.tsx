@@ -15,6 +15,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   )
     .then((res) => res.json())
     .then((data) => data.items);
+    
   return {
     props: {
       product: { ...product, images: [product.image_url, product.image_url] },
