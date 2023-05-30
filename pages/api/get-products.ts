@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-
 async function getProducts({
   skip,
   take,

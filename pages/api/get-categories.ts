@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-
 async function getCategories() {
   try {
     const response = await prisma.categories.findMany({});
