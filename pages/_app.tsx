@@ -15,12 +15,12 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
-    // <GoogleOAuthProvider clientId={CLIENT_ID}>
-    <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-      </QueryClientProvider>
-    </SessionProvider>
-    // </GoogleOAuthProvider>
+    <GoogleOAuthProvider clientId={CLIENT_ID}>
+      <SessionProvider session={session}>
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
+      </SessionProvider>
+    </GoogleOAuthProvider>
   );
 }
