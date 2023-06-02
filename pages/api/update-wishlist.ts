@@ -6,6 +6,7 @@ import { authOptions } from "./auth/[...nextauth]";
 const prisma = new PrismaClient();
 
 async function updateWishlist(userId: string, productId: string) {
+  console.log("userId", userId)
   try {
     const wishlist = await prisma.wishlist.findUnique({
       where: {
@@ -37,7 +38,7 @@ async function updateWishlist(userId: string, productId: string) {
       },
     })
 
-    console.log(123)
+    // console.log(response.userId)
 
     return response?.productsIds.split(',')
   } catch (error) {

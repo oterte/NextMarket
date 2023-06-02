@@ -20,8 +20,10 @@ export const authOptions: NextAuthOptions ={
   },
   callbacks: {
     session: async ({ session, user }) => {
-      // session.id = user.id
-      // console.log("유저니??" , user, "세션이니?", session)
+      if(session.user !== undefined){
+        session.id = user.id;
+      }
+      console.log("유저니??" , user, "세션이니?", session)
       return Promise.resolve(session)
     },
   },

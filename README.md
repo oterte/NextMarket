@@ -126,3 +126,6 @@ useEffect(() => {
     - 찜하기 -> Session으로 사용자의 wishlist 목록 조회 -> 모든 테이블을 조회하는게 아닌, where로 userId를 조회하자
 
 
+20. 찜하기 구현 중 session.id 오류 및 유저 id가 undefined인 오류 발생
+  -> next-auth 4.22.1 버전에서 session은 DefaultSession을 상속중
+  ->  export interface Session extends Record<string, unknown>, DefaultSession {} 로 변경하여 오류 해결
