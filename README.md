@@ -129,3 +129,5 @@ useEffect(() => {
 20. 찜하기 구현 중 session.id 오류 및 유저 id가 undefined인 오류 발생
   -> next-auth 4.22.1 버전에서 session은 DefaultSession을 상속중
   ->  export interface Session extends Record<string, unknown>, DefaultSession {} 로 변경하여 오류 해결
+
+21. 찜하기 mutate에 optimistic update 적용 -> 요청하면 성공했을 거라고 예측하고 화면 업데이트 하기
