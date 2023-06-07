@@ -2,10 +2,14 @@ import CutsomEditor from "@/components/Editor";
 import { CATEGORY_MAP } from "@/constants/products";
 import { Button } from "@mantine/core";
 import { products } from "@prisma/client";
-import { IconHeart, IconHeartbeat } from "@tabler/icons-react";
+import {
+  IconHeart,
+  IconHeartbeat,
+  IconShoppingCart,
+} from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { convertFromRaw, EditorState } from "draft-js";
 import { GetServerSidePropsContext } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -81,6 +85,12 @@ export default function Products(props: {
     }
   );
 
+  const validate = (type: "cart" | "order") => {
+    alert("장바구니로 이동");
+    // TODO 장바구니 등록 기능 추가 필요
+    router.push("/cart");
+  };
+
   // console.log(wishlist);
   const product = props.product;
   const isWished =
@@ -104,8 +114,8 @@ export default function Products(props: {
                   key={`url-carousel-${idx}`}
                   src={item}
                   alt="image"
-                  width={600}
-                  height={600}
+                  width={620}
+                  height={780}
                   layout="responsive"
                 />
               ))}
@@ -113,7 +123,7 @@ export default function Products(props: {
             <div className="flex space-x-4 mt-2">
               {product.images.map((item, idx) => (
                 <div key={`url-thumb-${idx}`} onClick={() => setIndex(idx)}>
-                  <Image src={item} alt="image" width={100} height={190} />
+                  <Image src={item} alt="image" width={155} height={195} />
                 </div>
               ))}
             </div>
@@ -129,33 +139,54 @@ export default function Products(props: {
             <div className="text-lg">
               {product.price.toLocaleString("ko-kr")}원
             </div>
-            <Button
-              // loading={isLoading}
-              disabled={wishlist == null}
-              leftIcon={
-                isWished ? (
-                  <IconHeart size={20} stroke={1.5} />
-                ) : (
-                  <IconHeartbeat size={20} stroke={1.5} />
-                )
-              }
-              style={{ backgroundColor: isWished ? "red" : "grey" }}
-              radius="xl"
-              size="md"
-              styles={{
-                root: { paddingRight: 14, height: 48 },
-              }}
-              onClick={() => {
-                if (session == null) {
-                  alert("로그인이 필요합니다.");
-                  router.push("/auth/login");
-                  return;
+            <div className="flex space-x-3">
+              <Button
+                leftIcon={<IconShoppingCart size={20} stroke={1.5} />}
+                style={{ backgroundColor: "black" }}
+                radius="xl"
+                size="md"
+                styles={{
+                  root: { paddingRight: 14, height: 48 },
+                }}
+                onClick={() => {
+                  if (session == null) {
+                    alert("로그인이 필요합니다.");
+                    router.push("/auth/login");
+                    return;
+                  }
+                  validate("cart");
+                }}
+              >
+                장바구니
+              </Button>
+              <Button
+                // loading={isLoading}
+                disabled={wishlist == null}
+                leftIcon={
+                  isWished ? (
+                    <IconHeart size={20} stroke={1.5} />
+                  ) : (
+                    <IconHeartbeat size={20} stroke={1.5} />
+                  )
                 }
-                mutate(productId);
-              }}
-            >
-              찜하기
-            </Button>
+                style={{ backgroundColor: isWished ? "red" : "grey" }}
+                radius="xl"
+                size="md"
+                styles={{
+                  root: { paddingRight: 14, height: 48 },
+                }}
+                onClick={() => {
+                  if (session == null) {
+                    alert("로그인이 필요합니다.");
+                    router.push("/auth/login");
+                    return;
+                  }
+                  mutate(productId);
+                }}
+              >
+                찜하기
+              </Button>
+            </div>
             <div className="text-sm text-zinc-300">
               등록: {format(new Date(product.createdAt), "yyyy년 M월 d일")}
             </div>
