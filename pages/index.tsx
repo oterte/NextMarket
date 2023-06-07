@@ -1,60 +1,140 @@
+import { categories, products } from "@prisma/client";
 import Image from "next/image";
-import { Inter } from "next/font/google";
-import { useEffect, useRef, useState } from "react";
-import { css } from "@emotion/react";
-import Button from "@/components/Button";
+import { useCallback, useEffect, useState } from "react";
+import { Input, Pagination, SegmentedControl, Select } from "@mantine/core";
+import { CATEGORY_MAP, FILTERS, Take } from "@/constants/products";
+import { IconSearch } from "@tabler/icons-react";
+import useDebounce from "@/hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
+import {useSession} from 'next-auth/react'
+import { useRouter } from "next/router";
 
-const inter = Inter({ subsets: ["latin"] });
+function Home() {
+  const router = useRouter()
+  const {data:session} = useSession()
+  const [activePage, setPage] = useState(1);
+  // const [total, setTotal] = useState(0);
 
-export default function Home() {
-  const [products, setProducts] = useState<
-    { id: string; name: string; createdAt: String }[]
-  >([]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    fetch(`/api/get-products`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data.items));
-  }, []);
+  const [selectedCategory, setSelectedCategory] = useState<string>("-1");
+  const [filter, setFilter] = useState<string | null>(FILTERS[0].value);
+  const [keyword, setKeyword] = useState("");
 
-  const onHandleClick = () => {
-    if (inputRef.current == null || inputRef.current.value === "") {
-      alert("name을 넣어주세요.");
-      return;
+  const debouncedSearch = useDebounce<string>(keyword);
+
+  const { data: categories } = useQuery<
+    { items: categories[] },
+    unknown,
+    categories[]
+  >(
+    ["/api/get-categories"],
+    () => fetch(`/api/get-categories`).then((res) => res.json()),
+    { select: (data) => data.items }
+  );
+
+  const { data: total } = useQuery(
+    [
+      `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`,
+    ],
+    () =>
+      fetch(
+        `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`
+      )
+        .then((res) => res.json())
+        .then((data) => Math.ceil(data.items / Take))
+  );
+  const { data: products } = useQuery<
+    { items: products[] },
+    unknown,
+    products[]
+  >(
+    [
+      `/api/get-products?skip=${
+        Take * (activePage - 1)
+      }&take=${Take}&category=${selectedCategory}&orderBy=${filter}&contains=${debouncedSearch}`,
+    ],
+    () =>
+      fetch(
+        `/api/get-products?skip=${
+          Take * (activePage - 1)
+        }&take=${Take}&category=${selectedCategory}&orderBy=${filter}&contains=${debouncedSearch}`
+      ).then((res) => res.json()),
+    {
+      select: (data) => data.items,
     }
-    fetch(`/api/add-item?name=${inputRef.current.value}`)
-      .then((res) => res.json())
-      .then((data) => alert(data.message));
+  );
+
+  const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
   };
+
   return (
-    <div>
-      <input
-        type="text"
-        ref={inputRef}
-        className="placeholder:italic placeholder:text-slate-400 block bg-white w-96 border border-slate-300 rounded-md py-2 pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-        placeholder="Search for anything..."
-        name="search"
-      />
-      <button
-        css={css`
-          background-color: hotpink;
-          padding: 16px;
-          border-radius: 8px;
-        `}
-        onClick={onHandleClick}
-      >
-        Add Jacket
-      </button>
-      <Button onClick={onHandleClick}>Add Jacket 2</Button>
-      <div>
-        <p>Product List</p>
-        {products &&
-          products.map((item) => (
-            <div key={item.id}>
-              {item.name} <span>{item.createdAt}</span>
+    <div className="px-36 mt-36 mb-36">
+      {session && <p>안녕하세요. {session.user?.name}님</p>}
+      <div className="mb-4">
+        <Input
+          icon={<IconSearch />}
+          placeholder="Search"
+          value={keyword}
+          onChange={onHandleChange}
+        />
+      </div>
+      <div className="mb-4">
+        <Select value={filter} onChange={setFilter} data={FILTERS} />
+      </div>
+      {categories && (
+        <div className="mb-4">
+          <SegmentedControl
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            data={[
+              { label: "All", value: "-1" },
+              ...categories.map((item) => ({
+                label: item.name,
+                value: String(item.id),
+              })),
+            ]}
+            color="dark"
+          />
+        </div>
+      )}
+      {products && (
+        <div className="grid grid-cols-3 gap-5">
+          {products.map((item) => (
+            <div key={item.id} style={{ maxWidth: 310 }} onClick={() => router.push(`/products/${item.id}`)}>
+              <Image
+                className="rounded"
+                src={item.image_url ?? ""}
+                alt={item.name}
+                width={310}
+                height={390}
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+              />
+              <div className="flex">
+                <span>{item.name}</span>
+                <span className="ml-auto">
+                  {item.price.toLocaleString("ko-kr")} 원
+                </span>
+              </div>
+              <span className="text-zinc-400">
+                {CATEGORY_MAP[item.category_id - 1]}
+              </span>
             </div>
           ))}
+        </div>
+      )}
+      <div className="w-full flex mt-5">
+        {total && (
+          <Pagination
+            className="m-auto"
+            value={activePage}
+            onChange={setPage}
+            total={total}
+          />
+        )}
       </div>
     </div>
   );
 }
+
+export default Home;

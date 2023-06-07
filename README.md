@@ -131,3 +131,5 @@ useEffect(() => {
   ->  export interface Session extends Record<string, unknown>, DefaultSession {} 로 변경하여 오류 해결
 
 21. 찜하기 mutate에 optimistic update 적용 -> 요청하면 성공했을 거라고 예측하고 화면 업데이트 하기
+
+22. Layout 공통화 처리 -  Header 만들고 홈, 카트, 유저 정보 보여주게

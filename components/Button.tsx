@@ -1,11 +1,9 @@
-import styled from '@emotion/styled'
-import React from 'react'
-
+import styled from "@emotion/styled";
 const Button = styled.button`
-  padding: 16px;
+  padding: 8px;
   border-radius: 8px;
-  background-color: hotpink;
-  
-`
+  background-color: black;
+  color: white;
+`;
 
-export default Button
+export default Button;
