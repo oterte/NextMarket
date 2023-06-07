@@ -1,3 +1,4 @@
+import { CountControl } from "@/components/CountControl";
 import CutsomEditor from "@/components/Editor";
 import { CATEGORY_MAP } from "@/constants/products";
 import { Button } from "@mantine/core";
@@ -35,6 +36,7 @@ export default function Products(props: {
 }) {
   const [index, setIndex] = useState(0);
   const { data: session } = useSession();
+  const [quantity, setQuantity] = useState<number | undefined>(1);
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id: productId }: any = router.query;
@@ -86,6 +88,10 @@ export default function Products(props: {
   );
 
   const validate = (type: "cart" | "order") => {
+    if (quantity == null) {
+      alert("최소 수량을 선택하세요");
+      return;
+    }
     alert("장바구니로 이동");
     // TODO 장바구니 등록 기능 추가 필요
     router.push("/cart");
@@ -138,6 +144,15 @@ export default function Products(props: {
             <div className="text-4xl font-semibold">{product.name}</div>
             <div className="text-lg">
               {product.price.toLocaleString("ko-kr")}원
+            </div>
+            <div>
+              <span className="text-lg">수량</span>
+              <CountControl
+                value={quantity}
+                setValue={setQuantity}
+                min={1}
+                max={100}
+              />
             </div>
             <div className="flex space-x-3">
               <Button
