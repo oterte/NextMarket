@@ -1,4 +1,4 @@
-import { IconHome, IconShoppingCart, IconUser } from "@tabler/icons-react";
+import { IconHeart, IconHome, IconShoppingCart, IconUser } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -16,6 +16,12 @@ function Header() {
           }}
         />
         <span className="m-auto"></span>
+        <IconHeart
+          className="mr-4"
+          onClick={() => {
+            router.push("/wishlist");
+          }}
+        />
         <IconShoppingCart
           className="mr-4"
           onClick={() => {
