@@ -2,7 +2,7 @@ import { CountControl } from "@/components/CountControl";
 import CutsomEditor from "@/components/Editor";
 import { CATEGORY_MAP } from "@/constants/products";
 import { Button } from "@mantine/core";
-import { products } from "@prisma/client";
+import {  Cart, products } from "@prisma/client";
 import {
   IconHeart,
   IconHeartbeat,
@@ -87,18 +87,36 @@ export default function Products(props: {
     }
   );
 
-  const validate = (type: "cart" | "order") => {
+  const { mutate: addCart } = useMutation<
+    unknown,
+    unknown,
+    Omit<Cart, "id" | "userId">,
+    any
+  >((item) =>
+    fetch(`/api/add-cart`, {
+      method: "POST",
+      body: JSON.stringify({ item }),
+    })
+      .then((res) => res.json())
+      .then((data) => data.items)
+  );
+  const product = props.product;
+  console.log("product...", product)
+  const validate = async (type: "cart" | "order") => {
     if (quantity == null) {
       alert("최소 수량을 선택하세요");
       return;
     }
-    alert("장바구니로 이동");
-    // TODO 장바구니 등록 기능 추가 필요
+
+    await addCart({
+      productId:product.id,
+      quantity: quantity,
+      price: product.price * quantity,
+    });
     router.push("/cart");
   };
 
   // console.log(wishlist);
-  const product = props.product;
   const isWished =
     wishlist != null && productId != null
       ? wishlist.includes(productId)

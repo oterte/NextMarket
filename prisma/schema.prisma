@@ -85,3 +85,10 @@ model wishlist {
   userId String @unique
   productsIds String
 }
+model Cart{
+  id Int @id @default(autoincrement())
+  userId String
+  productId Int
+  quantity Int
+  price Int
+}

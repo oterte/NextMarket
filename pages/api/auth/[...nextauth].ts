@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { CLIENT_ID, SECRET_KEY } from "@/constants/googleAuth";
 
 const prisma = new PrismaClient();
+// console.log(prisma)
 
 export const authOptions: NextAuthOptions ={
   adapter: PrismaAdapter(prisma),
