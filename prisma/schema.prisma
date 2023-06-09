@@ -90,5 +90,5 @@ model Cart{
   userId String
   productId Int
   quantity Int
-  price Int
+  totalprice Int
 }
