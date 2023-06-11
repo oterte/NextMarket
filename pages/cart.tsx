@@ -1,5 +1,5 @@
 import { CountControl } from "@/components/CountControl";
-import { CATEGORY_MAP } from "@/constants/products";
+import { CART_QUERY_KEY, CATEGORY_MAP } from "@/constants/products";
 import styled from "@emotion/styled";
 import { Button } from "@mantine/core";
 import { Cart, products } from "@prisma/client";
@@ -21,7 +21,7 @@ interface CartItem extends Cart {
 //   image_url: string;
 //   cost: number;
 // }
-const CART_QUERY_KEY = "/api/get-cart";
+
 
 function CartPage() {
   const { data } = useQuery<{ items: CartItem[] }, unknown, CartItem[]>(

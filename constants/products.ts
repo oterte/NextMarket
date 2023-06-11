@@ -24,3 +24,5 @@ export const getOrderBy = (orderBy?: string) => {
       : { orderBy: { price: "asc" } }
     : undefined;
 };
+
+export const CART_QUERY_KEY = "/api/get-cart";
