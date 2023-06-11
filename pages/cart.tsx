@@ -21,7 +21,7 @@ interface CartItem extends Cart {
 //   image_url: string;
 //   cost: number;
 // }
-const CART_QUERY_KEY = '/api/get-cart'
+const CART_QUERY_KEY = "/api/get-cart";
 
 function CartPage() {
   const { data } = useQuery<{ items: CartItem[] }, unknown, CartItem[]>(
@@ -160,7 +160,7 @@ const Item = (props: CartItem) => {
       setCost(quantity * props.price);
     }
   }, [quantity, props.price]);
-  const { mutate } = useMutation<unknown, unknown, Cart, any>(
+  const { mutate: updateMutate } = useMutation<unknown, unknown, Cart, any>(
     (item) =>
       fetch(`/api/update-cart`, {
         method: "POST",
@@ -170,7 +170,6 @@ const Item = (props: CartItem) => {
         .then((data) => data.items),
     {
       onMutate: async (item) => {
-        
         await queryClient.cancelQueries([CART_QUERY_KEY]);
         // 현재 값 가져오기
         const previous = queryClient.getQueryData([CART_QUERY_KEY]);
@@ -188,19 +187,51 @@ const Item = (props: CartItem) => {
       },
     }
   );
-  const onHandleDelete = () => {
+  const { mutate: deleteMutate } = useMutation<unknown, unknown, number, any>(
+    (id) =>
+      fetch(`/api/delete-cart`, {
+        method: "POST",
+        body: JSON.stringify({ id }),
+      })
+        .then((res) => res.json())
+        .then((data) => data.items),
+    {
+      onMutate: async (id) => {
+        await queryClient.cancelQueries([CART_QUERY_KEY]);
+        // 현재 값 가져오기
+        const previous = queryClient.getQueryData([CART_QUERY_KEY]);
+        // 그 가져온 현재의 값을 리턴하고, 있었다면 빼버리고, 없었다면 추가한 상태로 리턴
+        queryClient.setQueryData<Cart[]>([CART_QUERY_KEY], (old) =>
+          old?.filter((c) => c.id !== id)
+        );
+        return { previous };
+      },
+      onError: (error, _, context) => {
+        queryClient.setQueryData([CART_QUERY_KEY], context.previous);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries([CART_QUERY_KEY]);
+      },
+    }
+  );
+  const onHandleDelete = async () => {
     // todo - 장바구니 삭제 기능 구현
+    await deleteMutate(props.id);
     alert("삭제되었습니다.");
   };
   const onHandleUpdate = () => {
     // todo - 장바구니 업데이트 기능 구현
-    if(quantity == null){
-      alert('최소 수량을 선택하세요')
+    if (quantity == null) {
+      alert("최소 수량을 선택하세요");
       return;
     }
-    mutate({...props, quantity:quantity, totalprice: props.price * quantity})
+    updateMutate({
+      ...props,
+      quantity: quantity,
+      totalprice: props.price * quantity,
+    });
   };
-  
+
   return (
     <div className="w-full flex p-4" style={{ borderBottom: "1px solid grey" }}>
       <Image
