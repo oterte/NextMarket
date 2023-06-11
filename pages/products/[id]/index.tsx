@@ -111,7 +111,7 @@ export default function Products(props: {
     await addCart({
       productId:product.id,
       quantity: quantity,
-      price: product.price * quantity,
+      totalprice: product.price * quantity,
     });
     router.push("/cart");
   };
