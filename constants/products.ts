@@ -26,3 +26,19 @@ export const getOrderBy = (orderBy?: string) => {
 };
 
 export const CART_QUERY_KEY = "/api/get-cart";
+
+export const ORDER_QUERY_KEY = "/api/add-order";
+
+export const ORDER_STATUS_MAP = [
+  "주문취소",
+  "주문대기",
+  "결제대기",
+  "결제완료",
+  "배송대기",
+  "배송중",
+  "배송완료",
+  "환불대기",
+  "환불완료",
+  "반품대기",
+  "반품완료",
+];

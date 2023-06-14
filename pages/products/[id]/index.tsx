@@ -1,8 +1,12 @@
 import { CountControl } from "@/components/CountControl";
 import CutsomEditor from "@/components/Editor";
-import { CART_QUERY_KEY, CATEGORY_MAP } from "@/constants/products";
+import {
+  CART_QUERY_KEY,
+  CATEGORY_MAP,
+  ORDER_QUERY_KEY,
+} from "@/constants/products";
 import { Button } from "@mantine/core";
-import { Cart, products } from "@prisma/client";
+import { Cart, OrderItem, products } from "@prisma/client";
 import {
   IconHeart,
   IconHeartbeat,
@@ -109,8 +113,29 @@ export default function Products(props: {
       },
     }
   );
+  const { mutate: addOrder } = useMutation<
+    unknown,
+    unknown,
+    Omit<OrderItem, "id">[],
+    any
+  >(
+    (items) =>
+      fetch(`/api/add-order`, {
+        method: "POST",
+        body: JSON.stringify({ items }),
+      })
+        .then((res) => res.json())
+        .then((data) => data.items),
+    {
+      onMutate: () => {
+        queryClient.invalidateQueries([ORDER_QUERY_KEY]);
+      },
+      onSuccess: () => {
+        router.push("/my");
+      },
+    }
+  );
   const product = props.product;
-  console.log("product...", product);
   const validate = (type: "cart" | "order") => {
     if (quantity == null) {
       alert("최소 수량을 선택하세요");
@@ -122,6 +147,16 @@ export default function Products(props: {
         quantity: quantity,
         totalprice: product.price * quantity,
       });
+    }
+    if (type === "order") {
+      addOrder([
+        {
+          productId: product.id,
+          quantity: quantity,
+          eachPrice: product.price,
+          totalprice: product.price * quantity,
+        },
+      ]);
     }
   };
 
@@ -229,6 +264,24 @@ export default function Products(props: {
                 찜하기
               </Button>
             </div>
+            <Button
+              style={{ backgroundColor: "black" }}
+              radius="xl"
+              size="md"
+              styles={{
+                root: { paddingRight: 14, height: 48 },
+              }}
+              onClick={() => {
+                if (session == null) {
+                  alert("로그인이 필요합니다.");
+                  router.push("/auth/login");
+                  return;
+                }
+                validate("order");
+              }}
+            >
+              구매하기
+            </Button>
             <div className="text-sm text-zinc-300">
               등록: {format(new Date(product.createdAt), "yyyy년 M월 d일")}
             </div>

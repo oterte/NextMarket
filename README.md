@@ -137,4 +137,22 @@ useEffect(() => {
 23. 구매하기 기능 추가 - 단일 및 여러 상품 동시 구매 기능, 실제 결제 시스템은 추가 x
                       - 진입점은? 1) 상품 상세, 2) 장바구니, 3) 내 주문내역
                       - 주문 목록 페이지를 마이페이지에 두자
-                  
+                      
+  -  구매하기 기능 추가 중 Unexpected end of JSON input at JSON.parse 오류 발생
+
+    - req.body가 빈 공백으로 받아와지는 문제가 있다. 하지만 response 에는  제대로 넘어가고 있다.
+    ```
+created Id.... 6
+[6]
+{
+  id: 6,
+  userId: 'cli318cqf0000uzckgs5ktuby',
+  orderItemIds: '6',
+  receiver: null,
+  address: null,
+  phoneNumber: null,
+  createdAt: 2023-06-14T09:47:38.030Z,
+  status: 0
+}
+    ```
+
