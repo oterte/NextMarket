@@ -41,10 +41,8 @@ async function getProducts({
       ...orderByCondition,
       where: where,
     });
-    console.log(response);
     return response;
   } catch (error) {
-    console.log(error);
     console.error(error);
   } finally {
   }

@@ -10,11 +10,9 @@ async function getProduct(id:number) {
         id:id
       }
     })
-    // console.log(response)
+
     return response
   } catch (error) {
-    console.log(error)
-    console.error((error));
   } finally {
   }
 }
