@@ -1,24 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-async function updateProduct(id:number, contents:string) {
+async function updateProduct(id: number, contents: string) {
   try {
     const response = await prisma.products.update({
-      where:{
-        id:id,
+      where: {
+        id: id,
       },
-      data:{
-        contents:contents
-      }
-    })
-    console.log(response)
-    return response
+      data: {
+        contents: contents,
+      },
+    });
+    return response;
   } catch (error) {
-    console.log(error)
-    console.error((error));
-  } 
+    console.error(error);
+  }
 }
 
 type Data = {
@@ -30,10 +28,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {id, contents} = JSON.parse(req.body);
-  if(id === null){
-    res.status(400).json({message:'no id or contents'})
-    return
+  const { id, contents } = JSON.parse(req.body);
+  if (id === null) {
+    res.status(400).json({ message: "no id or contents" });
+    return;
   }
   try {
     const products = await updateProduct(Number(id), contents);

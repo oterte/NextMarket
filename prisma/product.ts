@@ -24,7 +24,6 @@ async function main() {
     const product = await prisma.products.create({
       data: p,
     });
-    console.log(`created id : ${product.id}`);
   }
 }
 
@@ -33,7 +32,6 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.log(e);
     await prisma.$disconnect();
     process.exit(1);
   });

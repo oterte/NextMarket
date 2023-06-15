@@ -6,7 +6,6 @@ import { authOptions } from "./auth/[...nextauth]";
 const prisma = new PrismaClient();
 
 async function getWishlists(userId: string) {
-  console.log("wishlist", userId);
   try {
     const wishList = await prisma.wishlist.findUnique({
       where: {
@@ -24,7 +23,6 @@ async function getWishlists(userId: string) {
           },
         },
       });
-      console.log(response);
       return response;
     }
   } catch (error) {
@@ -42,7 +40,6 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const session: any = await getServerSession(req, res, authOptions);
-  // console.log("세션", session)
   if (session == null) {
     res.status(200).json({ items: [], message: "no Session" });
     return;

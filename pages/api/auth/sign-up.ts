@@ -22,10 +22,8 @@ async function signUp(credential: string) {
         image: decoded.picture,
       },
     });
-    console.log(response);
     return response;
   } catch (error) {
-    console.log(error);
     console.error(error);
   } finally {
   }

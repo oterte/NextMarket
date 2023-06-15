@@ -17,7 +17,7 @@ interface OrderDetail extends Orders {
 }
 
 function MyPage() {
-  const { data } = useQuery<{ items: Orders[] }, unknown, OrderDetail[]>(
+  const { data } = useQuery<{ items: OrderDetail[] }, unknown, OrderDetail[]>(
     [ORDER_QUERY_KEY],
     () =>
       fetch(ORDER_QUERY_KEY)

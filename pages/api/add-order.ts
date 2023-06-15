@@ -38,7 +38,7 @@ async function addOrder(
       },
     })
 
-    console.log('response', response)
+    console.log('response', response )
 
     return response
   } catch (error) {
@@ -56,6 +56,8 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const session = await getServerSession(req, res, authOptions)
+  console.log('추가 되는거 맞나?.......', req.body)
+  // console.log('req.......', req.body.orderInfo)
   const { items, orderInfo } = JSON.parse(req.body)
   if (session == null) {
     res.status(200).json({ items: [], message: 'no Session' })
