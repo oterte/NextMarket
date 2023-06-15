@@ -7,6 +7,7 @@ import { IconSearch } from "@tabler/icons-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { chownSync } from "fs";
 
 function Home() {
   const router = useRouter()
@@ -28,7 +29,6 @@ function Home() {
     () => fetch(`/api/get-categories`).then((res) => res.json()),
     { select: (data) => data.items }
   );
-
   const { data: total } = useQuery(
     [
       `/api/get-products-count?category=${selectedCategory}&contains=${debouncedSearch}`,
@@ -64,7 +64,7 @@ function Home() {
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
-
+  console.log(categories)
   return (
     <div className="px-36 mt-36 mb-36">
       <div className="mb-4">

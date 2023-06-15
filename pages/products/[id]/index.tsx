@@ -40,7 +40,7 @@ export default function Products(props: {
 }) {
   const [index, setIndex] = useState(0);
   const { data: session } = useSession();
-  const [quantity, setQuantity] = useState<number | undefined>(1);
+  const [many, setMany] = useState<number | undefined>(1);
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id: productId }: any = router.query;
@@ -137,24 +137,24 @@ export default function Products(props: {
   );
   const product = props.product;
   const validate = (type: "cart" | "order") => {
-    if (quantity == null) {
+    if (many == null) {
       alert("최소 수량을 선택하세요");
       return;
     }
     if (type === "cart") {
       addCart({
         productId: product.id,
-        quantity: quantity,
-        totalprice: product.price * quantity,
+        quantity: many,
+        totalprice: product.price * many,
       });
     }
     if (type === "order") {
       addOrder([
         {
           productId: product.id,
-          quantity: quantity,
+          quantity: many,
           eachPrice: product.price,
-          totalprice: product.price * quantity,
+          totalprice: product.price * many,
         },
       ]);
     }
@@ -210,8 +210,8 @@ export default function Products(props: {
             <div>
               <span className="text-lg">수량</span>
               <CountControl
-                value={quantity}
-                setValue={setQuantity}
+                value={many}
+                setValue={setMany}
                 min={1}
                 max={100}
               />

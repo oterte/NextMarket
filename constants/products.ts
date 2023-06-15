@@ -27,7 +27,7 @@ export const getOrderBy = (orderBy?: string) => {
 
 export const CART_QUERY_KEY = "/api/get-cart";
 
-export const ORDER_QUERY_KEY = "/api/add-order";
+export const ORDER_QUERY_KEY = "/api/get-order";
 
 export const ORDER_STATUS_MAP = [
   "주문취소",

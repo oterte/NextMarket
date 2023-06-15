@@ -24,7 +24,7 @@ async function getOrder(userId: string) {
         .split(",")
         .map((item) => Number(item))) {
         const res: OrderItem[] =
-          await prisma.$queryRaw`SELECT i.id quantity, totalprice, eachprice, name, image_url, productId FROM OrderItem as i JOIN products as p ON i.productId=p.id WHERE i.id=${id};`;
+          await prisma.$queryRaw`SELECT i.id  productId, quantity, eachPrice, totalprice, name, image_url FROM OrderItem as i JOIN products as p ON i.productId=p.id WHERE i.id=${id};`;
         orderItems.push.apply(orderItems, res);
       }
       response.push({ ...order, orderItems });

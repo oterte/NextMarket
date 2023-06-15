@@ -51,6 +51,7 @@ function MyPage() {
 
 export default MyPage;
 const DetailItem = (props: OrderDetail) => {
+  console.log(props)
   return (
     <div
       className="w-full flex p-4 rounded-sm"
@@ -76,7 +77,9 @@ const Item = (props: OrderItemDetail) => {
       setCost(quantity * props.eachPrice);
     }
   }, [quantity, props.eachPrice]);
-
+  // console.log(props)
+  // console.log(typeof(props.quantity))
+  // console.log(typeof(props.eachPrice))
   return (
     <div className="w-full flex p-4" style={{ borderBottom: "1px solid grey" }}>
       <Image

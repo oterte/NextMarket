@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Cart, OrderItem, PrismaClient } from '@prisma/client'
-import { getServerSession, unstable_getServerSession } from 'next-auth'
+import {  OrderItem, PrismaClient } from '@prisma/client'
+import { getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
-import { couldStartTrivia } from 'typescript'
 
 const prisma = new PrismaClient()
 
@@ -24,7 +23,7 @@ async function addOrder(
       console.log(`Created id: ${orderItem.id}`)
       orderItemIds.push(orderItem.id)
     }
-    console.log(orderItemIds)
+
     console.log(JSON.stringify(orderItemIds))
 
     // 만들어진 orderItemIds 를 포함한 order를 만든다.
@@ -38,7 +37,7 @@ async function addOrder(
       },
     })
 
-    console.log('response', response )
+    console.log('response......', response)
 
     return response
   } catch (error) {
@@ -56,9 +55,8 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const session = await getServerSession(req, res, authOptions)
-  console.log('추가 되는거 맞나?.......', req.body)
-  // console.log('req.......', req.body.orderInfo)
   const { items, orderInfo } = JSON.parse(req.body)
+  console.log("items", items)
   if (session == null) {
     res.status(200).json({ items: [], message: 'no Session' })
     return
