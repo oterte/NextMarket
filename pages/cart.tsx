@@ -1,8 +1,12 @@
 import { CountControl } from "@/components/CountControl";
-import { CART_QUERY_KEY, CATEGORY_MAP } from "@/constants/products";
+import {
+  CART_QUERY_KEY,
+  CATEGORY_MAP,
+  ORDER_QUERY_KEY,
+} from "@/constants/products";
 import styled from "@emotion/styled";
 import { Button } from "@mantine/core";
-import { Cart, products } from "@prisma/client";
+import { Cart, OrderItem, products } from "@prisma/client";
 import { IconRefresh, IconX } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -22,8 +26,8 @@ interface CartItem extends Cart {
 //   cost: number;
 // }
 
-
 function CartPage() {
+  const queryClient = useQueryClient();
   const { data } = useQuery<{ items: CartItem[] }, unknown, CartItem[]>(
     [CART_QUERY_KEY],
     () =>
@@ -54,8 +58,44 @@ function CartPage() {
       select: (data) => data.items,
     }
   );
+
+  const { mutate: addOrder } = useMutation<
+    unknown,
+    unknown,
+    Omit<OrderItem, "id">[],
+    any
+  >(
+    (items) =>
+      fetch(`/api/add-order`, {
+        method: "POST",
+        body: JSON.stringify({ items }),
+      })
+        .then((res) => res.json())
+        .then((data) => data.items),
+    {
+      onMutate: () => {
+        queryClient.invalidateQueries([ORDER_QUERY_KEY]);
+      },
+      onSuccess: () => {
+        router.push("/my");
+      },
+    }
+  );
+
   const onHandleOrder = () => {
     // 장바구니 주문 기능 구현
+    if (data == null) {
+      alert("장바구니가 비어있습니다.");
+      return;
+    }
+    addOrder(
+      data.map((item) => ({
+        productId: item.productId,
+        eachPrice: item.price,
+        quantity: item.quantity,
+        totalprice: item.totalprice,
+      }))
+    );
     alert("주문되었습니다.");
   };
   return (

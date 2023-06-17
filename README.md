@@ -158,4 +158,4 @@ created Id.... 6
 - 문제 해결.. 쿼리 키를 add-order가 아닌 get-order로 해야 했는데, add-order로 되어있어서 오류가 발생했던 것
 
 - 다른 문제 발생, props로 내려오는 정보가 부정확한 상태 -> number인 eachprice가 undefined로, orderItemIds의 값이 quantity로 들어감
-  -> get-order에서 쿼리 조회를 잘못 하고 있어서 생긴 문제. 퀴로 조회문 수정으로 해결
+  -> get-order에서 쿼리 조회를 잘못 하고 있어서 생긴 문제.  조회문 수정으로 해결

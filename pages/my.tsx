@@ -6,6 +6,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { Badge, Button } from "@mantine/core";
+import { IconX } from "@tabler/icons-react";
+import { format } from "date-fns";
 
 interface OrderItemDetail extends OrderItem {
   name: string;
@@ -51,17 +54,48 @@ function MyPage() {
 
 export default MyPage;
 const DetailItem = (props: OrderDetail) => {
-  console.log(props)
   return (
     <div
-      className="w-full flex p-4 rounded-sm"
+      className="w-full flex flex-col p-4 rounded-md"
       style={{ border: "1px solid grey" }}
     >
+      <div className="flex">
+        <Badge color={props.status === 0 ? "red" : ""} className="mb-2">
+          {ORDER_STATUS_MAP[props.status + 1]}
+        </Badge>
+        <IconX className="ml-auto" />
+      </div>
       <div>
-        <span>{ORDER_STATUS_MAP[props.status + 1]}</span>
         {props.orderItems.map((item, idx) => (
           <Item key={idx} {...item} />
         ))}
+        <div className="flex mt-4">
+          <div className="flex flex-col">
+            <span className="mb-2">주문 정보</span>
+            <span>받는 사람: {props.receiver ?? "입력 필요"}</span>
+            <span>주소: {props.address ?? "입력 필요"}</span>
+            <span>연락처: {props.phoneNumber ?? "입력 필요"}</span>
+          </div>
+          <div className="flex flex-col ml-auto mr-4 text-right">
+            <span className="font-semibold mb-2">
+              합계 금액:{" "}
+              <span className="text-red-500">
+                {props.orderItems
+                  .map((item) => item.totalprice)
+                  .reduce((prev, cur) => prev + cur, 0)
+                  .toLocaleString("ko-kr")}{" "}
+                원
+              </span>
+            </span>
+            <span className="text-zimc-400 mt-auto mb-auto">
+              주문 일자:{" "}
+              {format(new Date(props.createdAt), "yyyy년 M월 d일 HH:mm:ss")}
+            </span>
+            <Button style={{ backgroundColor: "black", color: "white" }}>
+              결제 처리
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -77,9 +111,7 @@ const Item = (props: OrderItemDetail) => {
       setCost(quantity * props.eachPrice);
     }
   }, [quantity, props.eachPrice]);
-  // console.log(props)
-  // console.log(typeof(props.quantity))
-  // console.log(typeof(props.eachPrice))
+
   return (
     <div className="w-full flex p-4" style={{ borderBottom: "1px solid grey" }}>
       <Image
