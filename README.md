@@ -159,3 +159,6 @@ created Id.... 6
 
 - 다른 문제 발생, props로 내려오는 정보가 부정확한 상태 -> number인 eachprice가 undefined로, orderItemIds의 값이 quantity로 들어감
   -> get-order에서 쿼리 조회를 잘못 하고 있어서 생긴 문제.  조회문 수정으로 해결
+
+
+25. order의 status 업데이트를 위한 api 추가 -> 결제 기능은 구현하지 않지만, 주문취소와 결제처리는 되게
