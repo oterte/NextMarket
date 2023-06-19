@@ -119,7 +119,7 @@ const DetailItem = (props: OrderDetail) => {
       </div>
       <div>
         {props.orderItems.map((item, idx) => (
-          <Item key={idx} {...item} />
+          <Item key={idx} {...item} status={props.status} />
         ))}
         <div className="flex mt-4">
           <div className="flex flex-col">
@@ -156,9 +156,8 @@ const DetailItem = (props: OrderDetail) => {
   );
 };
 
-const Item = (props: OrderItemDetail) => {
+const Item = (props: OrderItemDetail & { status: number }) => {
   const router = useRouter();
-
   const [quantity, setQuantity] = useState<number | undefined>(props.quantity);
   const [cost, setCost] = useState<number>(props.quantity);
   useEffect(() => {
@@ -166,7 +165,9 @@ const Item = (props: OrderItemDetail) => {
       setCost(quantity * props.eachPrice);
     }
   }, [quantity, props.eachPrice]);
-
+  const onHandleComment = () => {
+    router.push(`/comment/edit?orderItemId=${props.productId}`);
+  };
   return (
     <div className="w-full flex p-4" style={{ borderBottom: "1px solid grey" }}>
       <Image
@@ -185,8 +186,20 @@ const Item = (props: OrderItemDetail) => {
           <CountControl value={quantity} setValue={setQuantity} max={100} />
         </div>
       </div>
-      <div className="flex ml-auto space-x-4">
+      <div className="flex flex-col ml-auto space-x-4">
         <span>{cost.toLocaleString("ko-kr")} 원</span>
+        {props.status === 5 && (
+          <Button
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              marginTop: "auto",
+            }}
+            onClick={onHandleComment}
+          >
+            후기 작성
+          </Button>
+        )}
       </div>
     </div>
   );

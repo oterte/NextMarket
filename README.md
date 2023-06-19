@@ -164,3 +164,4 @@ created Id.... 6
 25. order의 status 업데이트를 위한 api 추가 -> 결제 기능은 구현하지 않지만, 주문취소와 결제처리는 되게
 
 26. order의 status가 주문 완료인 상품에 후기 추가하기
+  - 추가할 기능-> get-comment, update-comment, get-comments
