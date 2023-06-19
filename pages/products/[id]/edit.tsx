@@ -63,7 +63,7 @@ export default function Products() {
     }
   }, [productId])
 
-  const handleSave = () => {
+  const onHandleSave = () => {
     if (editorState && productId != null) {
       fetch('/api/update-product', {
         method: 'POST',
@@ -112,7 +112,7 @@ export default function Products() {
         <CutsomEditor
           editorState={editorState}
           onEditorStateChange={setEditorState}
-          onSave={handleSave}
+          onSave={onHandleSave}
         />
       )}
     </>
