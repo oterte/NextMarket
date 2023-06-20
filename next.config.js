@@ -10,6 +10,7 @@ const nextConfig = {
       "cdn.shopify.com",
       "raw.githubusercontent.com",
       "lh3.googleusercontent.com",
+      "i.ibb.co",
     ],
   },
 };
