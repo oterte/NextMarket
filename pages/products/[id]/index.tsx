@@ -1,3 +1,4 @@
+import CommentItem from "@/components/CommentItem";
 import { CountControl } from "@/components/CountControl";
 import CutsomEditor from "@/components/Editor";
 import {
@@ -6,7 +7,7 @@ import {
   ORDER_QUERY_KEY,
 } from "@/constants/products";
 import { Button } from "@mantine/core";
-import { Cart, OrderItem, products } from "@prisma/client";
+import { Cart, Comment, OrderItem, products } from "@prisma/client";
 import {
   IconHeart,
   IconHeartbeat,
@@ -28,15 +29,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   )
     .then((res) => res.json())
     .then((data) => data.items);
+  const comments = await fetch(
+    `http://localhost:3000/api/get-comments?productId=${context.params?.id}`
+  )
+    .then((res) => res.json())
+    .then((data) => data.items);
   return {
     props: {
       product: { ...product, images: [product.image_url, product.image_url] },
+      comments: comments,
     },
   };
 }
 
+export interface CommentItemType extends Comment, OrderItem {}
+
 export default function Products(props: {
   product: products & { images: string[] };
+  comments: CommentItemType[];
 }) {
   const [index, setIndex] = useState(0);
   const { data: session } = useSession();
@@ -198,6 +208,13 @@ export default function Products(props: {
             {editorState != null && (
               <CutsomEditor editorState={editorState} readOnly />
             )}
+            <div>
+              <p className="text-2xl font-semibold">후기</p>
+              {props.comments &&
+                props.comments.map((item, idx) => (
+                  <CommentItem key={idx} item={item}/>
+                ))}
+            </div>
           </div>
           <div style={{ maxWidth: 600 }} className="flex flex-col space-y-6">
             <div className="text-lg text-zinc-400">
@@ -209,12 +226,7 @@ export default function Products(props: {
             </div>
             <div>
               <span className="text-lg">수량</span>
-              <CountControl
-                value={many}
-                setValue={setMany}
-                min={1}
-                max={100}
-              />
+              <CountControl value={many} setValue={setMany} min={1} max={100} />
             </div>
             <div className="flex space-x-3">
               <Button
