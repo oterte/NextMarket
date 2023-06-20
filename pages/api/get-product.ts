@@ -10,7 +10,6 @@ async function getProduct(id:number) {
         id:id
       }
     })
-
     return response
   } catch (error) {
   } finally {

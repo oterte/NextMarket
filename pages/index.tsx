@@ -64,7 +64,6 @@ function Home() {
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
-  console.log(categories)
   return (
     <div className="px-36 mt-36 mb-36">
       <div className="mb-4">

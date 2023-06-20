@@ -32,12 +32,12 @@ function CommentEdit() {
     }
   }, [orderItemId]);
 
-  const handleSave = () => {
+  const onHandleSave = () => {
     if (editorState && orderItemId != null) {
       fetch("/api/update-comment", {
         method: "POST",
         body: JSON.stringify({
-          orderItemId: orderItemId,
+          orderItemId: Number(orderItemId),
           rate: rate,
           contents: JSON.stringify(
             convertToRaw(editorState.getCurrentContent())
@@ -48,6 +48,7 @@ function CommentEdit() {
         .then((res) => res.json())
         .then(() => {
           alert("Success");
+          router.back()
         });
     }
   };
@@ -57,7 +58,7 @@ function CommentEdit() {
         <CutsomEditor
           editorState={editorState}
           onEditorStateChange={setEditorState}
-          onSave={handleSave}
+          onSave={onHandleSave}
         />
       )}
       <Slider
