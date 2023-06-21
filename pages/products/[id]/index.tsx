@@ -24,6 +24,7 @@ import Carousel from "nuka-carousel";
 import { useState } from "react";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  console.log("context.params?.id.....", context.params?.id);
   const product = await fetch(
     `http://localhost:3000/api/get-product?id=${context.params?.id}`
   )
@@ -175,6 +176,7 @@ export default function Products(props: {
     wishlist != null && productId != null
       ? wishlist.includes(productId)
       : false;
+  console.log(props.comments);
   return (
     <>
       {product != null && productId != null ? (
@@ -212,7 +214,7 @@ export default function Products(props: {
               <p className="text-2xl font-semibold">후기</p>
               {props.comments &&
                 props.comments.map((item, idx) => (
-                  <CommentItem key={idx} item={item}/>
+                  <CommentItem key={idx} item={item} />
                 ))}
             </div>
           </div>
