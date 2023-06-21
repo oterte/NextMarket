@@ -10,7 +10,7 @@ function Google() {
             .then((data) => console.log(data));
         }}
         onError={() => {
-          console.log("Login fail");
+
         }}
       />
     </div>

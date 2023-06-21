@@ -24,7 +24,6 @@ import Carousel from "nuka-carousel";
 import { useState } from "react";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  console.log("context.params?.id.....", context.params?.id);
   const product = await fetch(
     `http://localhost:3000/api/get-product?id=${context.params?.id}`
   )
@@ -171,12 +170,11 @@ export default function Products(props: {
     }
   };
 
-  // console.log(wishlist);
   const isWished =
     wishlist != null && productId != null
       ? wishlist.includes(productId)
       : false;
-  console.log(props.comments);
+  console.log("props.comments........", props.comments);
   return (
     <>
       {product != null && productId != null ? (

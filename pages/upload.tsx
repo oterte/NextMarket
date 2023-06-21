@@ -24,7 +24,7 @@ function ImageUpload() {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          console.log("업로드 데이터...", data);
           setImage(data.data.image.url);
         })
         .catch((error) => console.log(error));

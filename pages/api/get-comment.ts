@@ -32,7 +32,7 @@ export default async function handler(
 ) {
   const session: any = await getServerSession(req, res, authOptions);
   const {orderItemId} = req.query
-  // console.log("세션", session)
+
   if (session == null) {
     res.status(200).json({ items: [], message: "no Session" });
     return;

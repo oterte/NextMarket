@@ -14,7 +14,7 @@ async function getOrder(userId: string) {
         userId,
       },
     });
-    console.log(orders);
+
 
     let response = [];
     // orders 안에 있는 orderItemIds로 orderItem을 꺼내고 products 테이블에서 이미지 등 정보 조합
@@ -45,7 +45,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const session: any = await getServerSession(req, res, authOptions);
-  // console.log("세션", session)
+
   if (session == null) {
     res.status(200).json({ items: [], message: "no Session" });
     return;
