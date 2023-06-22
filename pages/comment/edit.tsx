@@ -78,7 +78,6 @@ function CommentEdit() {
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log("edit data.......", data);
             // 반복을 허용하지 않는 Set 객체
             // 그 안에서 자체로 유일한 값들로만 이루어지게
             setImages((prev) =>

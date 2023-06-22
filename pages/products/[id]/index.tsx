@@ -174,7 +174,6 @@ export default function Products(props: {
     wishlist != null && productId != null
       ? wishlist.includes(productId)
       : false;
-  console.log("props.comments........", props.comments);
   return (
     <>
       {product != null && productId != null ? (
