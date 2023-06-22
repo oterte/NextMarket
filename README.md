@@ -172,3 +172,9 @@ created Id.... 6
  웹서비으세 이미지를 업로드하는 과정은 file은 저장소에 등록하고, url을 받는다-> 그 url을 db에 저장
  -> 이미지 저장하고 url을 받기위해 cloudflare, firebase, s3등을 이용할 수 있지만 유료인 경우가 많다
  -> 그래서 무료로 이용 가능한 ImgBB를 이용
+
+
+28. vercel 배포 단계에서 문제 발생 => 로컬 및 vscode에서 빌드할땐 어떠한 오류도 발생하지 않지만, vercel로 배포하려 하면 Type '""' is not assignable to type 'SetStateAction<number | undefined>'.이 발생한다.
+  - Type error: Type 'Dispatch<SetStateAction<number | undefined>>' is not assignable to type '(value: number | "") => void'.
+  하지만 d.ts파일 및 기타 CountControl 컴포넌트를 사용하는 곳을 보더라도 state의 type은 number 또는 undefined임
+  - 배포중에 생기는 문제일거라고 판단.
