@@ -13,7 +13,6 @@ async function deleteCart(id: number) {
       },
     });
 
-
     return response;
   } catch (error) {
     console.error(error);

@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 async function addItem(name: string) {
   try {
-    const res = "";
   } catch (error) {
     console.error(JSON.stringify(error));
   } finally {

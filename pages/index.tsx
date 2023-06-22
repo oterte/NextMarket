@@ -1,16 +1,15 @@
 import { categories, products } from "@prisma/client";
 import Image from "next/image";
-import {  useState } from "react";
+import { useState } from "react";
 import { Input, Pagination, SegmentedControl, Select } from "@mantine/core";
 import { CATEGORY_MAP, FILTERS, Take } from "@/constants/products";
 import { IconSearch } from "@tabler/icons-react";
 import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { chownSync } from "fs";
 
 function Home() {
-  const router = useRouter()
+  const router = useRouter();
   const [activePage, setPage] = useState(1);
   // const [total, setTotal] = useState(0);
 
@@ -96,7 +95,11 @@ function Home() {
       {products && (
         <div className="grid grid-cols-3 gap-5">
           {products.map((item) => (
-            <div key={item.id} style={{ maxWidth: 310 }} onClick={() => router.push(`/products/${item.id}`)}>
+            <div
+              key={item.id}
+              style={{ maxWidth: 310 }}
+              onClick={() => router.push(`/products/${item.id}`)}
+            >
               <Image
                 className="rounded"
                 src={item.image_url ?? ""}

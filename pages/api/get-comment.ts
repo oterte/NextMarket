@@ -5,17 +5,17 @@ import { authOptions } from "./auth/[...nextauth]";
 
 const prisma = new PrismaClient();
 
-async function getComment(userId: string, orderItemId:number) {
+async function getComment(userId: string, orderItemId: number) {
   try {
     const response = await prisma.comment.findUnique({
       where: {
         orderItemId: orderItemId,
       },
     });
-    if(response?.userId === userId){
-        return response
+    if (response?.userId === userId) {
+      return response;
     }
-    return {message:'userId is not matched'}
+    return { message: "userId is not matched" };
   } catch (error) {
     console.error(error);
   }
@@ -31,7 +31,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const session: any = await getServerSession(req, res, authOptions);
-  const {orderItemId} = req.query
+  const { orderItemId } = req.query;
 
   if (session == null) {
     res.status(200).json({ items: [], message: "no Session" });

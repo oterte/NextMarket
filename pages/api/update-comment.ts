@@ -1,9 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-import { getServerSession } from 'next-auth'
-import { authOptions } from './auth/[...nextauth]'
+import type { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function updateComment({
   userId,
@@ -12,11 +12,11 @@ async function updateComment({
   contents,
   images,
 }: {
-  userId: string
-  orderItemId: number
-  rate: number
-  contents: string
-  images: string
+  userId: string;
+  orderItemId: number;
+  rate: number;
+  contents: string;
+  images: string;
 }) {
   try {
     const response = await prisma.comment.upsert({
@@ -35,30 +35,28 @@ async function updateComment({
         rate,
         images,
       },
-    })
+    });
 
-    console.log(response)
-
-    return response
+    return response;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
 type Data = {
-  items?: any
-  message: string
-}
+  items?: any;
+  message: string;
+};
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const session = await getServerSession(req, res, authOptions)
-  const { orderItemId, rate, contents, images } = JSON.parse(req.body)
+  const session = await getServerSession(req, res, authOptions);
+  const { orderItemId, rate, contents, images } = JSON.parse(req.body);
   if (session == null) {
-    res.status(200).json({ items: [], message: 'no Session' })
-    return
+    res.status(200).json({ items: [], message: "no Session" });
+    return;
   }
   try {
     const wishlist = await updateComment({
@@ -67,9 +65,9 @@ export default async function handler(
       rate: rate,
       contents: contents,
       images: images,
-    })
-    res.status(200).json({ items: wishlist, message: 'Success' })
+    });
+    res.status(200).json({ items: wishlist, message: "Success" });
   } catch (error) {
-    res.status(400).json({ message: 'Failed' })
+    res.status(400).json({ message: "Failed" });
   }
 }

@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 async function getDetail(pageId: string, propertyId: string) {
   try {
-    const res = "";
   } catch (error) {
     console.error(JSON.stringify(error));
   } finally {

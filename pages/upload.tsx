@@ -1,4 +1,3 @@
-import AutoSizeImage from "@/components/AutoSizeImage";
 import Button from "@/components/Button";
 import styled from "@emotion/styled";
 import Image from "next/image";

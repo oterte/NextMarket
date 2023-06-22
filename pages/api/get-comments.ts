@@ -10,26 +10,21 @@ async function getComments(productId: number) {
         productId,
       },
     });
-    console.log("orderItems....???", orderItems);
     let response = [];
 
     // orderItemId를 기반으로 Comment를 조회한다.
     for (const orderItem of orderItems) {
-      console.log("orderItems.....", orderItems);
-      console.log("orderItem....", orderItem);
       const res = await prisma.comment.findUnique({
         where: {
           orderItemId: orderItem.productId,
         },
       });
-      console.log("조회할 아이디....", res);
+
       if (res) {
         response.push({ ...orderItem, ...res });
-      }else{
-        console.log("res가 없어")
+      } else {
       }
     }
-    console.log("조회할 댓글들....", response);
     return response;
   } catch (error) {
     console.error(error);

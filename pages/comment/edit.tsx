@@ -1,5 +1,4 @@
 import AutoSizeImage from "@/components/AutoSizeImage";
-import Button from "@/components/Button";
 import CutsomEditor from "@/components/Editor";
 import { Slider } from "@mantine/core";
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
